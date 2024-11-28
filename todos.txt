@@ -1,0 +1,9 @@
+-) instantiate github repo
+-) scenario design -> cut-in scenario, what needs to be adapted?
+    --> work with defined parameter distributions (based on OSC format, for GT generation)
+-) finalize execution.py (with simple ACC, etc.)
+-) work out usage in Google Colab - local usage including YOLO inference at runtime is not feasible
+-) check for tracking option in ultralytics
+    https://docs.ultralytics.com/modes/track/
+-) look into parallel execution (esmini doc, 5.4.1)
+    --> should be doable in principle
