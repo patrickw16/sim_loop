@@ -83,7 +83,7 @@ img = SEImage()
 # initialize esmini with provided scenario
 #se.SE_Init(sys.argv[1].encode('ascii'), 0, 1, 0, 0)
 
-se.SE_Init(xosc_path.encode(), 0, 3, 0, 0)
+se.SE_Init(xosc_path.encode(), 0, 1, 0, 0) #3 -> no viewer, but image generated
 se.SE_SetCameraMode(5) #first person view
 
 #se.SE_SaveImagesToFile(3)
@@ -98,55 +98,14 @@ j = 0
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
     flag = se.SE_FetchImage(ct.byref(img))
 
-    if state == 0 and se.SE_GetSimulationTime() > 2.0:
-        print("Injecting lane offset action");
-        lane_offset_action.id               = 0;
-        lane_offset_action.offset           = -0.45;
-        lane_offset_action.max_lateral_acc  = 0.5;
-        lane_offset_action.transition_shape = 0;
-        se.SE_InjectLaneOffsetAction(ct.byref(lane_offset_action));
-        state += 1
-    elif state == 1 and se.SE_GetSimulationTime() > 7.0:
-        print("Injecting lane change action");
-        lane_change_action.id               = 0;
-        lane_change_action.mode             = 1;
-        lane_change_action.target           = 1;
-        lane_change_action.transition_shape = 2;
-        lane_change_action.transition_dim   = 2;
-        lane_change_action.transition_value = 3.0;
-        se.SE_InjectLaneChangeAction(ct.byref(lane_change_action));
-        state += 1
-    elif state == 2 and se.SE_GetSimulationTime() > 8.0:
-        if se.SE_InjectedActionOngoing(5):  # 5 = LAT_LANE_CHANGE
-            print("Lane change already ongoing, skipping second lane change")
-        else:
-            print("Injecting lane change action 2");
-            lane_change_action.id               = 0;
-            lane_change_action.mode             = 1;
-            lane_change_action.target           = -1;
-            lane_change_action.transition_shape = 2;
-            lane_change_action.transition_dim   = 2;
-            lane_change_action.transition_value = 3.0;
-            se.SE_InjectLaneChangeAction(ct.byref(lane_change_action));
-        state += 1
-    elif state == 3 and se.SE_GetSimulationTime() > 9.5:
-        print("Injecting speed action - soft brake");
-        speed_action.id               = 0;
-        speed_action.speed            = 0.0;
-        speed_action.transition_shape = 0;
-        speed_action.transition_dim   = 1;
-        speed_action.transition_value = 5.0;
-        se.SE_InjectSpeedAction(ct.byref(speed_action));
-        state += 1
-    elif state == 4 and se.SE_GetSimulationTime() > 11.0:
-        print("Injecting speed action - hard brake");
-        speed_action.id               = 0;
-        speed_action.speed            = 0.0;
-        speed_action.transition_shape = 0;
-        speed_action.transition_dim   = 1;
-        speed_action.transition_value = 5.0;
-        se.SE_InjectSpeedAction(ct.byref(speed_action));
-        state += 1
+    #print("Injecting speed action - soft brake");
+    #speed_action.id               = 0;
+    #speed_action.speed            = 0.0;
+    #speed_action.transition_shape = 0;
+    #speed_action.transition_dim   = 1;
+    #speed_action.transition_value = 5.0;
+    #se.SE_InjectSpeedAction(ct.byref(speed_action));
+    #state += 1
 
     # step the simulation in natural speed, change to SE_Step(<time-step>) for fixed timestep
     se.SE_StepDT(0.1)
@@ -159,9 +118,9 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
         img_array = np.flip(img_array, 0) # flip y axis
         #img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB) # change BGR to RGB
         image_name = "output_" + str(j) + ".png"
-        cv2.imwrite(image_name, img_array)
+        #cv2.imwrite(image_name, img_array)
 
-        results = model(f"images/{image_name}")
-        results[0].save()
+        #results = model(f"images/{image_name}")
+        #results[0].save()
 
     j += 1
