@@ -83,7 +83,7 @@ img = SEImage()
 # initialize esmini with provided scenario
 #se.SE_Init(sys.argv[1].encode('ascii'), 0, 1, 0, 0)
 
-se.SE_Init(xosc_path.encode(), 0, 1, 0, 0) #3 -> no viewer, but image generated
+se.SE_Init(xosc_path.encode(), 0, 3, 0, 0) #3 -> no viewer, but image generated
 se.SE_SetCameraMode(5) #first person view
 
 #se.SE_SaveImagesToFile(3)
@@ -93,22 +93,16 @@ se.SE_CollisionDetection(True)
 # Load a model
 model = YOLO("best.pt")
 
-state = 0  # minimalistic state machine for trigging various actoins
+# Known width of the object (e.g., a car width in meters)
+KNOWN_WIDTH = 2.0  # Example width in meters
+# Focal length of the camera (calibrated)
+FOCAL_LENGTH = 45 * 800 / 36  # Example focal length in pixels
+
 j = 0
+flag_speed_action = False
+flag_braking = False
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
     flag = se.SE_FetchImage(ct.byref(img))
-
-    #print("Injecting speed action - soft brake");
-    #speed_action.id               = 0;
-    #speed_action.speed            = 0.0;
-    #speed_action.transition_shape = 0;
-    #speed_action.transition_dim   = 1;
-    #speed_action.transition_value = 5.0;
-    #se.SE_InjectSpeedAction(ct.byref(speed_action));
-    #state += 1
-
-    # step the simulation in natural speed, change to SE_Step(<time-step>) for fixed timestep
-    se.SE_StepDT(0.1)
     coll_ego = se.SE_GetObjectNumberOfCollisions(0)
     if not flag:
         total_bytes = img.pixelSize * img.width * img.height
@@ -117,10 +111,36 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
 
         img_array = np.flip(img_array, 0) # flip y axis
         #img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB) # change BGR to RGB
-        image_name = "output_" + str(j) + ".png"
+        #image_name = "output_" + str(j) + ".png"
         #cv2.imwrite(image_name, img_array)
-
         #results = model(f"images/{image_name}")
-        #results[0].save()
+        results = model(img_array)
+        results[0].save()
 
+        # Iterate through the results and calculate distances
+        for r in results:
+            for box in r.boxes:
+                cls = box.cls
+                conf = box.conf
+                if conf >= 0.3:
+                    # Calculate the width of the bounding box in pixels
+                    box_width = box.xyxy[0][2] - box.xyxy[0][0]
+                    ego_box_left_edge = 800/2 - box_width/2
+                    object_right_edge = box.xyxy[0][2]
+                    # Calculate the distance
+                    distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width
+                    if object_right_edge > ego_box_left_edge and distance < 30:
+                        flag_braking = True
+
+        if flag_braking and not flag_speed_action:
+            print("Injecting speed action - brake")
+            speed_action.id               = 0
+            speed_action.speed            = 0.0
+            speed_action.transition_shape = 0
+            speed_action.transition_dim   = 1
+            speed_action.transition_value = 7.0
+            se.SE_InjectSpeedAction(ct.byref(speed_action))
+            flag_speed_action = True
+
+    se.SE_StepDT(0.1)
     j += 1

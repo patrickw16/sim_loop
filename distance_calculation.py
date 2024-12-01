@@ -14,7 +14,7 @@ from ultralytics import YOLO
 model = YOLO("best.pt")
 
 # Load an image
-image_path = r"/home/patrick_w/sim_loop/_old/figures/output_73.png"
+image_path = r"/home/patrick_w/sim_loop/_old/figures/output_81.png"
 image = cv2.imread(image_path)
 
 # Perform inference
@@ -36,9 +36,12 @@ for r in results:
             box_width = box.xyxy[0][2] - box.xyxy[0][0]
             #Lateral distance:
             #ego camera is always at 400 (middle of 800, width of image)
-            #ego is as width as object -> use same box_width
+            #ego is same width as object -> use same box_width
             #determine "begin" of ego bounding box -> 400 - box_width/2
             #all in pixels: if bounding boxes (right edge of object and left edge of ego) overlap (+ distance smaller than x (determined with point mass model for braking)) then brake
+            ego_box_left_edge = 800/2 - box_width/2
+            object_right_edge = box.xyxy[0][2]
+            print(object_right_edge, ego_box_left_edge)
             # Calculate the distance
             distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width
             print(f"Object: {model.names[int(cls)]}, Distance: {distance:.2f} meters")

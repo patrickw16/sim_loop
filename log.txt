@@ -3,7 +3,7 @@ esmini GIT TAG: v2.40.3
 esmini GIT BRANCH: tags/v2.40.3^0
 esmini BUILD VERSION: N/A - client build
 No fixed timestep specified - running in realtime speed
-Generated seed 902129952
+Generated seed 3144896978
 Loading /home/patrick_w/esmini/resources/xosc/cut-in.xosc (v1.1)
 0 variables
 Unsupported geo reference attr: +no_defs
@@ -23,7 +23,7 @@ Expr ${BrakeCondition_HWT + _ + $HeadwayTime_Brake} = BrakeCondition_HWT + _ + 0
    EgoStartS = 50
    TargetVehicle = car_red
    HostVehicle = car_white
-0.000: Window created at 72,142 with size 800,400
+0.000: Window created at 60,60 with size 800,400
 0.000: Loaded scenegraph: /home/patrick_w/esmini/resources/xosc/../models/e6mini.osgb
 0.000: Object ../models/railing-pole.osgb missing length, set to bounding box length 0.10
 0.000: Object ../models/railing-pole.osgb missing width, set to bounding box width 0.10
@@ -60,39 +60,3 @@ Expr ${BrakeCondition_HWT + _ + $HeadwayTime_Brake} = BrakeCondition_HWT + _ + 0
 0.000: Init Ego LongitudinalAction runningState -> endTransition -> completeState
 0.000: Init OverTaker TeleportAction runningState -> endTransition -> completeState
 0.000: FetchCapturedImagePtr Error: No image data
-0.100: Trigger /------------------------------------------------
-0.100: CutInActStart == true, 0.1000 > 0.0000 edge: none
-0.100: Trigger  ------------------------------------------------/
-0.100: CutInAndBrakeAct standbyState -> startTransition -> runningState
-0.100: CutInAndBrakeSequence initState -> startTransition -> runningState
-0.100: CutInManeuver initState -> startTransition -> runningState
-0.100: OverTakerStartSpeedEvent initState -> initToStandbyTransition -> standbyState
-0.100: CutInEvent initState -> initToStandbyTransition -> standbyState
-0.100: OvertakerBrakeEvent initState -> initToStandbyTransition -> standbyState
-0.100: Trigger /------------------------------------------------
-0.100: OverTakerStartSpeedCondition == true, element: CutInAndBrakeAct state: START_TRANSITION, edge: none
-0.100: Trigger  ------------------------------------------------/
-0.100: OverTakerStartSpeedEvent standbyState -> startTransition -> runningState
-0.100: OverTakerStartSpeedAction initState -> startTransition -> runningState
-6.800: Trigger /------------------------------------------------
-6.800: CutInStartCondition == true, HWT: 0.41 > 0.40, edge rising
-6.800: Triggering entity 0: Ego
-6.800: Trigger  ------------------------------------------------/
-6.800: OverTakerStartSpeedAction runningState -> endTransition -> completeState
-6.800: OverTakerStartSpeedEvent complete after 1 execution
-6.800: OverTakerStartSpeedEvent runningState -> endTransition -> completeState
-6.800: Event OverTakerStartSpeedEvent ended, overwritten by event CutInEvent
-6.800: CutInEvent standbyState -> startTransition -> runningState
-6.800: CutInAction initState -> startTransition -> runningState
-8.300: Trigger /------------------------------------------------
-8.300: BrakeCondition_HWT_0.7 == true, HWT: 0.70 > 0.70, edge rising
-8.300: Triggering entity 0: Ego
-8.300: Trigger  ------------------------------------------------/
-8.300: Other events ongoing, OvertakerBrakeEvent will run in parallel
-8.300: OvertakerBrakeEvent standbyState -> startTransition -> runningState
-8.300: OvertakerBrakeAction initState -> startTransition -> runningState
-9.700: CutInAction runningState -> endTransition -> completeState
-9.700: CutInEvent complete after 1 execution
-9.700: CutInEvent runningState -> endTransition -> completeState
-13.000: Collision between Ego and OverTaker
-13.700: Collision between Ego and OverTaker dissolved
