@@ -8,3 +8,19 @@
     https://docs.ultralytics.com/modes/track/
 -) look into parallel execution (esmini doc, 5.4.1)
     --> should be doable in principle
+
+-) Scenario design "cut-in"
+    --> Reduce the parameters to be varied to the absolute minimum!
+    --> Ego vehicle velocity: Fixed!
+    --> vary the following:
+        --> s (long. delta between ego and tp)
+        --> delta v
+        --> any maybe one parameter regarding weather, e.g. fog (cv2 effect)
+        --> 3 parameters. Full permutation at 10 values each: 10*10*10 = 1000
+        --> think about fixing s as well (or delta v), would allow more fine-grained values of other 2 parameters, e.g. 20*20 = 400 (doable)
+        --> with parallel execution, hopefully time for one scenario comes down to ~15 secs.
+        --> 1000*15 sec = 4,16h , 400*15sec = 1,6h
+    --> Change structure of scenario:
+        --> start with tp ahead of ego exactly s
+        --> immediatly beginn with cut-in. Do cut-in AND brake (long and lat action in one event)
+        --> should reduce overall time of scenario to ~1/3
