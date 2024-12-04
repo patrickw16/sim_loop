@@ -6,7 +6,7 @@ import numpy as np
 
 from ultralytics import YOLO
 
-xosc_path = os.path.join(os.path.expanduser('~'), "esmini/resources/xosc/cut-in.xosc")
+xosc_path = os.path.join(os.path.expanduser('~'), "sim_loop/scenarios/cut-in.xosc")
 lib_path = os.path.join(os.path.expanduser('~'), "esmini")
 
 lib_paths = {
@@ -83,7 +83,7 @@ img = SEImage()
 # initialize esmini with provided scenario
 #se.SE_Init(sys.argv[1].encode('ascii'), 0, 1, 0, 0)
 
-se.SE_Init(xosc_path.encode(), 0, 3, 0, 0) #3 -> no viewer, but image generated
+se.SE_Init(xosc_path.encode(), 0, 1, 0, 0) #3 -> no viewer, but image generated
 se.SE_SetCameraMode(5) #first person view
 
 #se.SE_SaveImagesToFile(3)
@@ -104,6 +104,8 @@ flag_braking = False
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
     flag = se.SE_FetchImage(ct.byref(img))
     coll_ego = se.SE_GetObjectNumberOfCollisions(0)
+    if coll_ego > 0:
+        exit(-1)
     if not flag:
         total_bytes = img.pixelSize * img.width * img.height
         img_data = np.ctypeslib.as_array(img.data, shape=(total_bytes,))
@@ -114,8 +116,9 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
         #image_name = "output_" + str(j) + ".png"
         #cv2.imwrite(image_name, img_array)
         #results = model(f"images/{image_name}")
-        results = model(img_array)
-        results[0].save()
+        #results = model(img_array)
+        #results[0].save()
+        results = []
 
         # Iterate through the results and calculate distances
         for r in results:
