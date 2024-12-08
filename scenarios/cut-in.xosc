@@ -97,16 +97,6 @@
                               </LaneChangeAction>
                            </LateralAction>
                         </PrivateAction>
-                        <PrivateAction>
-                           <LongitudinalAction>
-                              <SpeedAction>
-                                 <SpeedActionDynamics dynamicsShape="linear" value="-4" dynamicsDimension="rate"/>
-                                 <SpeedActionTarget>
-                                    <AbsoluteTargetSpeed value="0"/>
-                                 </SpeedActionTarget>
-                              </SpeedAction>
-                           </LongitudinalAction>
-                        </PrivateAction>
                      </Action>
                   </Event>
                </Maneuver>
@@ -124,7 +114,7 @@
       </Story>
       <StopTrigger>
           <ConditionGroup>
-             <Condition name="StopCondition" delay="5" conditionEdge="rising">
+             <Condition name="StopCondition" delay="3" conditionEdge="rising">
                 <ByValueCondition>
                    <StoryboardElementStateCondition storyboardElementType="maneuver"
                                                     storyboardElementRef="CutInManeuver"

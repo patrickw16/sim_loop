@@ -6,6 +6,42 @@ import numpy as np
 
 from ultralytics import YOLO
 
+
+def calculate_distance_threshold(distances, dt, j, ego_deceleration):
+    """
+    Calculate the distance threshold based on the given distances, time step, 
+    current index, and ego deceleration.
+
+    Args:
+        distances (list): A list of distances.
+        dt (float): The time step.
+        j (int): The current (time) index.
+        ego_deceleration (float): The ego deceleration.
+
+    Returns:
+        float: The calculated distance threshold.
+    """
+    if not distances or len(distances) < 2:
+        return 500  # default distance threshold
+
+    distances_without_zeros = [item for item in distances if item != 0]
+    if len(distances_without_zeros) < 2:
+        return 500  # default distance threshold
+
+    not_zero_indices = [index for index, value in enumerate(distances[0:-1]) if value != 0]
+    if not not_zero_indices:
+        return 500  # default distance threshold
+
+    distances_delta = distances[-1] - distances[max(not_zero_indices)]
+    time_delta = (j - max(not_zero_indices)) * dt
+    delta_v = distances_delta / time_delta
+
+    if delta_v == 0:
+        return 500  # default distance threshold
+    else:
+        return np.square(delta_v) / (2 * ego_deceleration)
+
+
 xosc_path = os.path.join(os.path.expanduser('~'), "sim_loop/scenarios/cut-in.xosc")
 lib_path = os.path.join(os.path.expanduser('~'), "esmini")
 
@@ -83,7 +119,7 @@ img = SEImage()
 # initialize esmini with provided scenario
 #se.SE_Init(sys.argv[1].encode('ascii'), 0, 1, 0, 0)
 
-se.SE_Init(xosc_path.encode(), 0, 1, 0, 0) #3 -> no viewer, but image generated
+se.SE_Init(xosc_path.encode(), 0, 3, 0, 1) #3 -> no viewer, but image generated
 se.SE_SetCameraMode(5) #first person view
 
 #se.SE_SaveImagesToFile(3)
@@ -99,6 +135,10 @@ KNOWN_WIDTH = 2.0  # Example width in meters
 FOCAL_LENGTH = 45 * 800 / 36  # Example focal length in pixels
 
 j = 0
+delta_v = 0
+dt = 0.1
+ego_deceleration = 5.0
+distances = list()
 flag_speed_action = False
 flag_braking = False
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
@@ -132,7 +172,9 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
                     object_right_edge = box.xyxy[0][2]
                     # Calculate the distance
                     distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width
-                    if object_right_edge > ego_box_left_edge and distance < 30:
+                    distances = distances.append(distance)
+                    distance_threshold = calculate_distance_threshold(distances, dt, j, ego_deceleration)
+                    if object_right_edge > ego_box_left_edge and distance < distance_threshold:
                         flag_braking = True
 
         if flag_braking and not flag_speed_action:
@@ -145,5 +187,5 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = True
 
-    se.SE_StepDT(0.1)
+    se.SE_StepDT(dt)
     j += 1
