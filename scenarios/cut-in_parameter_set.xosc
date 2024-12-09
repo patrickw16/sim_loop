@@ -5,13 +5,13 @@
     <ScenarioFile filepath="cut-in.xosc" />
     <Deterministic>
       <DeterministicSingleParameterDistribution parameterName="s_delta">
-        <DistributionRange stepWidth="1">
-          <Range lowerLimit="20" upperLimit="22" />
+        <DistributionRange stepWidth="5">
+          <Range lowerLimit="10" upperLimit="70" />
         </DistributionRange>
       </DeterministicSingleParameterDistribution>
       <DeterministicSingleParameterDistribution parameterName="v_delta">
-        <DistributionRange stepWidth="1">
-          <Range lowerLimit="13" upperLimit="15" />
+        <DistributionRange stepWidth="5">
+          <Range lowerLimit="1" upperLimit="40" />
         </DistributionRange>
       </DeterministicSingleParameterDistribution>
       <!-- <DeterministicSingleParameterDistribution parameterName="HeadwayTime_LaneChange"> -->
