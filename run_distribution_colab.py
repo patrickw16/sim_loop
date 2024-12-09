@@ -36,7 +36,7 @@ def launch_scenario(index):
     launched += 1
     print_status()
     p = subprocess.run(
-        ['python', 'colab_execution.py'] + list(sys.argv[1:]) + ['--param_permutation'] + [str(index)],
+        ['python', '/sim_loop/colab_execution.py'] + list(sys.argv[1:]) + ['--param_permutation'] + [str(index)],
         stdout=subprocess.DEVNULL
     )
     done += 1
