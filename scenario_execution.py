@@ -39,7 +39,7 @@ def calculate_distance_threshold(distances, dt, j, ego_deceleration):
     if delta_v == 0:
         return 500  # default distance threshold
     else:
-        return np.square(delta_v) / (2 * ego_deceleration)
+        return (delta_v*delta_v) / (2 * ego_deceleration)
 
 
 xosc_path = os.path.join(os.path.expanduser('~'), "sim_loop/scenarios/cut-in.xosc")
@@ -153,12 +153,12 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
 
         img_array = np.flip(img_array, 0) # flip y axis
         #img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB) # change BGR to RGB
-        #image_name = "output_" + str(j) + ".png"
-        #cv2.imwrite(image_name, img_array)
+        image_name = "output_" + str(j) + ".png"
+        cv2.imwrite(image_name, img_array)
         #results = model(f"images/{image_name}")
-        #results = model(img_array)
-        #results[0].save()
-        results = []
+        results = model(img_array)
+        results[0].save()
+        #results = []
 
         # Iterate through the results and calculate distances
         for r in results:
@@ -171,9 +171,11 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
                     ego_box_left_edge = 800/2 - box_width/2
                     object_right_edge = box.xyxy[0][2]
                     # Calculate the distance
-                    distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width
-                    distances = distances.append(distance)
+                    distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width.item()
+                    distances.append(distance)
+                    print(distances, dt, j, ego_deceleration)
                     distance_threshold = calculate_distance_threshold(distances, dt, j, ego_deceleration)
+                    print(distance_threshold)
                     if object_right_edge > ego_box_left_edge and distance < distance_threshold:
                         flag_braking = True
 

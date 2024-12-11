@@ -182,7 +182,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
                     ego_box_left_edge = 800/2 - box_width/2
                     object_right_edge = box.xyxy[0][2]
                     # Calculate the distance
-                    distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width
+                    distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width.item()
                     distances.append(distance)
                     distance_threshold = calculate_distance_threshold(distances, dt, j, ego_deceleration)
                     if object_right_edge > ego_box_left_edge and distance < distance_threshold:
