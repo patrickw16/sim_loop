@@ -1,6 +1,0 @@
-esmini GIT REV: v2.40.3-0-9fa4bae8
-esmini GIT TAG: v2.40.3
-esmini GIT BRANCH: tags/v2.40.3^0
-esmini BUILD VERSION: N/A - client build
-Player arguments:  /content/sim_loop/colab_execution.py --window 60 60 800 400 --headless --osc /content/sim_loop/scenarios/cut-in.xosc --param_dist /content/sim_loop/scenarios/cut-in_parameter_set.xosc --param_permutation 103
-Loaded /content/sim_loop/scenarios/cut-in_parameter_set.xosc
