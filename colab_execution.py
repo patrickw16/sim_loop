@@ -36,10 +36,14 @@ def calculate_distance_threshold(distances, dt, j, ego_deceleration):
         return 500  # default distance threshold
 
     distances_delta = distances[-1] - distances[max(not_zero_indices)]
+    
     time_delta = (j - max(not_zero_indices)) * dt
     delta_v = distances_delta / time_delta
 
-    if delta_v == 0:
+    time_delta = dt
+    delta_v = (distances[-1] - distances[-2]) / dt
+
+    if delta_v == 0 or delta_v > 40:
         return 500  # default distance threshold
     else:
         return np.square(delta_v) / (2 * ego_deceleration)
