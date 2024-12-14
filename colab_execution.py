@@ -149,6 +149,7 @@ j = 0
 delta_v = 0
 dt = 0.1
 ego_deceleration = 5.0
+conf_level = 0.6
 distances = list()
 flag_speed_action = False
 flag_braking = False
@@ -176,7 +177,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             for box in r.boxes:
                 cls = box.cls
                 conf = box.conf
-                if conf >= 0.3:
+                if conf >= conf_level:
                     # Calculate the width of the bounding box in pixels
                     box_width = box.xyxy[0][2] - box.xyxy[0][0]
                     ego_box_left_edge = 800/2 - box_width/2
@@ -187,6 +188,8 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
                     distance_threshold = calculate_distance_threshold(distances, dt, j, ego_deceleration)
                     if object_right_edge > ego_box_left_edge and distance < distance_threshold:
                         flag_braking = True
+                    else:
+                        flag_braking = False
 
         if flag_braking and not flag_speed_action:
             print("Injecting speed action - brake")
@@ -197,6 +200,16 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             speed_action.transition_value = 7.0
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = True
+        
+        if not flag_braking and flag_speed_action:
+            print("Injecting speed action - accelerate")
+            speed_action.id               = 0
+            speed_action.speed            = 30.0
+            speed_action.transition_shape = 0
+            speed_action.transition_dim   = 1
+            speed_action.transition_value = 7.0
+            se.SE_InjectSpeedAction(ct.byref(speed_action))
+            flag_speed_action = False
 
     se.SE_StepDT(dt)
     j += 1

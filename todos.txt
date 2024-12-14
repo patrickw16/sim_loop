@@ -24,3 +24,6 @@
         --> start with tp ahead of ego exactly s
         --> immediatly beginn with cut-in. Do cut-in AND brake (long and lat action in one event)
         --> should reduce overall time of scenario to ~1/3
+
+-) Think of ways to adapt simulation to have more "unreasonable" behaviour in the GT
+    --> e.g. conf. level higher (e.g. 0.6)
