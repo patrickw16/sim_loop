@@ -173,7 +173,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
         #results = model(f"images/{image_name}")
         #cv2_imshow(img_array)
         results = model(img_array)
-        results[0].save()
+        #results[0].save()
 
         # Iterate through the results and calculate distances
         for r in results:
