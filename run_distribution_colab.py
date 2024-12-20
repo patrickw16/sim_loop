@@ -49,7 +49,7 @@ if __name__ == '__main__':
         stdout=subprocess.DEVNULL
     )
     n_runs = p.returncode
-
+    print(n_runs)
     print_status()
 
     with ThreadPool() as p:
