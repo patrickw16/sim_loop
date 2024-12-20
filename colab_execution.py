@@ -157,7 +157,6 @@ conf_level = 0.6
 distances = list()
 flag_speed_action = False
 flag_braking = False
-visibility_threshold = 50
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
     flag = se.SE_FetchImage(ct.byref(img))
     coll_ego = se.SE_GetObjectNumberOfCollisions(0)
@@ -173,7 +172,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
         #image_name = "output_" + str(j) + ".png"
         #cv2.imwrite(image_name, img_array)
         #results = model(f"images/{image_name}")
-        cv2_imshow(img_array)
+        #cv2_imshow(img_array)
         results = model(img_array)
         #results[0].save()
 
@@ -189,8 +188,6 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
                     object_right_edge = box.xyxy[0][2]
                     # Calculate the distance
                     distance = (KNOWN_WIDTH * FOCAL_LENGTH) / box_width.item()
-                    if distance > visibility_threshold:
-                        distance = 0
                     distances.append(distance)
                     distance_threshold = calculate_distance_threshold(distances, dt, j, ego_deceleration)
                     if object_right_edge > ego_box_left_edge and distance < distance_threshold:
