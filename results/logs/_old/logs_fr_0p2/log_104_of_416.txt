@@ -1,0 +1,89 @@
+esmini GIT REV: v2.40.3-0-9fa4bae8
+esmini GIT TAG: v2.40.3
+esmini GIT BRANCH: tags/v2.40.3^0
+esmini BUILD VERSION: N/A - client build
+Using parameter distribution file: /content/sim_loop/scenarios/cut-in_parameter_set.xosc
+No fixed timestep specified - running in realtime speed
+Generated seed 2528359119
+Parameter permutation 104/416
+   s_delta: 22.000000
+   v_delta: 24.000000
+Loading /content/sim_loop/scenarios/cut-in_fr_0p2.xosc (v1.1)
+0 variables
+Unsupported geo reference attr: +no_defs
+Unsupported object type: rail-pole - interpret as NONE
+Unsupported object type: rail-pole - interpret as NONE
+Unsupported object type: guide-post - interpret as NONE
+Unsupported object type: guide-post - interpret as NONE
+Loaded OpenDRIVE: /content/esmini/resources/xodr/e6mini_fr_0p2.xodr
+Expr ${250/3.6} = 250/3.6 = 69.4444444444
+Expr ${$EgoSpeed / 3.6} = 108 / 3.6 = 30.0000000000
+Expr ${$EgoStartS + $s_delta} = 25 + 22.000000 = 47.0000000000
+Expr ${$EgoSpeed/3.6 - $v_delta/3.6} = 108/3.6 - 24.000000/3.6 = 23.3333333333
+6 parameters:
+   v_delta = 24.000000
+   s_delta = 22.000000
+   EgoSpeed = 108
+   EgoStartS = 25
+   TargetVehicle = car_red
+   HostVehicle = car_white
+0.000: Window created at 60,60 with size 800,400
+0.000: Loaded scenegraph: /content/esmini/resources/models/e6mini.osgb
+0.000: Object ../models/railing-pole.osgb missing length, set to bounding box length 0.10
+0.000: Object ../models/railing-pole.osgb missing width, set to bounding box width 0.10
+0.000: Object ../models/railing-pole.osgb missing height, set to bounding box height 1.00
+0.000: Object ../models/railing-pole.osgb missing length, set to bounding box length 0.10
+0.000: Object ../models/railing-pole.osgb missing width, set to bounding box width 0.10
+0.000: Object ../models/railing-pole.osgb missing height, set to bounding box height 1.00
+0.000: Object ../models/railing.osgb missing length, set to bounding box length 4.00
+0.000: Object ../models/railing.osgb missing width, set to bounding box width 0.10
+0.000: Object ../models/railing.osgb missing height, set to bounding box height 0.20
+0.000: Object ../models/railing.osgb missing length, set to bounding box length 4.00
+0.000: Object ../models/railing.osgb missing width, set to bounding box width 0.10
+0.000: Object ../models/railing.osgb missing height, set to bounding box height 0.20
+0.000: Object ../models/guide-post.osgb missing length, set to bounding box length 0.08
+0.000: Object ../models/guide-post.osgb missing width, set to bounding box width 0.13
+0.000: Object ../models/guide-post.osgb missing height, set to bounding box height 1.25
+0.000: Object ../models/guide-post.osgb missing length, set to bounding box length 0.08
+0.000: Object ../models/guide-post.osgb missing width, set to bounding box width 0.13
+0.000: Object ../models/guide-post.osgb missing height, set to bounding box height 1.25
+0.000: Adjusted OverTaker bounding box to model car_red.osgb - xyz: 1.46, 0.00, 0.77 lwh: 5.04, 2.04, 1.49
+0.000: Init Ego TeleportAction initState -> startTransition -> runningState
+0.000: Starting teleport Action
+0.000: Ego New position:
+0.000: Pos(8.08, 24.97, -0.01) Rot(1.57, 0.00, 0.00) roadId 0 laneId -3 offset 0.00 t -8.00
+0.000: Init Ego LongitudinalAction initState -> startTransition -> runningState
+0.000: Init OverTaker TeleportAction initState -> startTransition -> runningState
+0.000: Starting teleport Action
+0.000: OverTaker New position:
+0.000: Pos(4.59, 46.98, -0.04) Rot(1.57, 0.00, 0.00) roadId 0 laneId -2 offset 0.00 t -4.42
+0.000: Init OverTaker LongitudinalAction initState -> startTransition -> runningState
+0.000: storyBoard initState -> startTransition -> runningState
+0.000: CutInAndBrakeStory initState -> startTransition -> runningState
+0.000: CutInAndBrakeAct initState -> initToStandbyTransition -> standbyState
+0.000: Init Ego TeleportAction runningState -> endTransition -> completeState
+0.000: Init Ego LongitudinalAction runningState -> endTransition -> completeState
+0.000: Init OverTaker TeleportAction runningState -> endTransition -> completeState
+0.000: Init OverTaker LongitudinalAction runningState -> endTransition -> completeState
+0.000: FetchCapturedImagePtr Error: No image data
+0.100: Trigger /------------------------------------------------
+0.100: CutInActStart == true, 0.1000 > 0.0000 edge: none
+0.100: Trigger  ------------------------------------------------/
+0.100: CutInAndBrakeAct standbyState -> startTransition -> runningState
+0.100: CutInAndBrakeSequence initState -> startTransition -> runningState
+0.100: CutInManeuver initState -> startTransition -> runningState
+0.100: CutInEvent initState -> initToStandbyTransition -> standbyState
+0.100: Trigger /------------------------------------------------
+0.100: Trigger  ------------------------------------------------/
+0.100: CutInEvent standbyState -> startTransition -> runningState
+0.100: CutInAction initState -> startTransition -> runningState
+1.600: Adding action SpeedAction_0
+1.600: SpeedAction_0 initState -> startTransition -> runningState
+1.700: Adding action SpeedAction_1
+1.700: Action SpeedAction_0 of type SpeedAction already ongoing for Ego, stopping it
+1.700: SpeedAction_0 runningState -> endTransition -> completeState
+1.700: SpeedAction_1 initState -> startTransition -> runningState
+1.800: Injected action SpeedAction_0 finished
+1.800: SpeedAction_1 runningState -> endTransition -> completeState
+1.900: Injected action SpeedAction_1 finished
+2.600: Collision between Ego and OverTaker
