@@ -3,6 +3,21 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 
+def fail_ratio(pass_fail: np.ndarray) -> float:
+    
+    # Count the number of True and False values
+    true_count = len(pass_fail[pass_fail])
+    false_count = len(pass_fail[~pass_fail])
+
+    # Calculate the ratio
+    if false_count > 0:  # Avoid division by zero
+        ratio = false_count / (true_count + false_count)
+    else:
+        ratio = 0
+    
+    return ratio
+
+
 # Function to define the vertices of a cube centered at a given point with different sizes
 def create_cube(center, size):
     x, y, z = center
