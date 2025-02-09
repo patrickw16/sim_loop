@@ -12,13 +12,14 @@ if __name__ == '__main__':
     
 
     evaluation_dict = dict()
+    i_j_combi = [(i, j) for i in np.arange(2,25,2) for j in np.arange(1,3,1)]
 
-    for j in np.arange(2,25,2): 
-
+    for combi_idx, combi in enumerate(i_j_combi):
+        i, j = combi
         #Evaluation data
-        s_delta_range = np.arange(10,62,j)
-        v_delta_range = np.arange(10,42,j)
-        ego_max_dec_range = np.arange(3,8,2)
+        s_delta_range = np.arange(10,62,i)
+        v_delta_range = np.arange(10,42,i)
+        ego_max_dec_range = np.arange(3,8,j)
 
         # Create a meshgrid
         grid1, grid2, grid3 = np.meshgrid(s_delta_range, v_delta_range, ego_max_dec_range, indexing='ij')
@@ -53,11 +54,13 @@ if __name__ == '__main__':
         gt_fail_ratio = fail_ratio(gt_pass_fail)
         eval_fail_ratio = fail_ratio(np.array(pass_fail))
         fail_ratio_difference = (fail_ratio(gt_pass_fail)-fail_ratio(np.array(pass_fail)))*100
+        abs_fail_ratio_difference = np.abs(fail_ratio_difference)
         number_of_test_cases = len(points)
 
-        evaluation_dict[j] = {
+        evaluation_dict[combi_idx] = {
             'metric': metric,
             'fail_ratio_difference': fail_ratio_difference,
+            'absolute_fail_ratio_difference': abs_fail_ratio_difference,
             'number_of_test_cases': number_of_test_cases,
             'gt_fail_ratio': gt_fail_ratio,
             'eval_fail_ratio': eval_fail_ratio,

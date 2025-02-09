@@ -23,6 +23,12 @@ if __name__ == '__main__':
 
     points = scaler.inverse_transform(re_sampled_scaled)
 
+    # Step 1: take the param_values and generate the test case file for simulation
+        # --> focus on test case amount between 8-100 (less makes no sense, and more as well)
+    # Step 2: run the simulation and get the results (pass/fail info)
+    # Step 3 (optional): place additional evaluation points depending on the shape/position of the logistic regression plane compared to the orignal
+    # Step 4: load the GT results and perform the comparison/evaluation
+
     pass_fail = [True] * len(adapted_kmeans_labels)
 
     #Compare
