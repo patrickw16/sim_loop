@@ -21,10 +21,20 @@ if __name__ == '__main__':
             
     param_values, cov_contribution, updated_cluster_traces, adapted_kmeans_labels, re_sampled_scaled, scaler, weighted_within_variance = my_coverage_param.get_optimised_values(plot_path='/home/patrick_w/odd_coverage/var_poc_3d_example.svg')
 
+    print(param_values)
+
     points = scaler.inverse_transform(re_sampled_scaled)
 
     # Step 1: take the param_values and generate the test case file for simulation
         # --> focus on test case amount between 8-100 (less makes no sense, and more as well)
+
+    # Parameter distribution cannot be used, as already concrete test cases are defined (with the explicit values)
+    # Take the param values and generate the individual scenarios (changing s_delta and v_delta)
+    # New files for run_distribution needs to be created --> as input at least the amount of test cases and the folder of the scenarios
+    # Then, using the index (refering to the param values), the saved param values need be loaded and then the ego max dec needs to be determined (based on the index)
+    # For colab usage this needs to be combined in a Juypter notebook...
+    # -------------------------
+
     # Step 2: run the simulation and get the results (pass/fail info)
     # Step 3 (optional): place additional evaluation points depending on the shape/position of the logistic regression plane compared to the orignal
     # Step 4: load the GT results and perform the comparison/evaluation
