@@ -16,25 +16,21 @@ def launch_scenario(index):
     global done
     launched += 1
     print_status()
-    #p = subprocess.run(
-    #    ['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + [f'--osc /content/sim_loop/scenarios/variance_bounded/{str(index)}_cut-in.xosc'] + ['--fixed_timestep 0.05'] + ['--headless'] + ['--window 60 60 800 400'] + [f'--logfile_path ../{str(index)}_log.txt'] + [str(param_values[idx,2])],
-    #    stdout=subprocess.DEVNULL
-    #)
     p = subprocess.run(
-        ['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + ['--osc /content/sim_loop/scenarios/cut-in.xosc'] + ['--fixed_timestep 0.05']
+        ['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + ['--osc'] + [f'/content/sim_loop/scenarios/variance_bounded/{str(index)}_cut-in.xosc'] + ['--fixed_timestep'] + ['0.05'] + ['--headless'] + ['--window'] + ['60 60 800 400'] + ['--logfile_path'] + [f'../{str(index)}_log.txt'] + [str(param_values[idx,2])],
+        stdout=subprocess.DEVNULL
     )
+
     done += 1
     print_status()
 
 
 if __name__ == '__main__':
 
-    #n_runs = len(param_values)
+    n_runs = len(param_values)
     print_status()
 
-    #with ThreadPool() as p:
-    #    p. map(launch_scenario, range(n_runs))
-
-    subprocess.run(['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + ['--osc /content/sim_loop/scenarios/cut-in.xosc'])
+    with ThreadPool() as p:
+        p. map(launch_scenario, range(n_runs))
 
     print()

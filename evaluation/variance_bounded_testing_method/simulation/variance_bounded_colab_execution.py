@@ -141,7 +141,7 @@ se.SE_SaveImagesToRAM(True)
 se.SE_CollisionDetection(True)
 
 # Load a model
-model = YOLO("/content/sim_loop/best.pt")
+model = YOLO("/content/sim_loop/gt_generation/best.pt")
 
 # Known width of the object (e.g., a car width in meters)
 KNOWN_WIDTH = 2.0  # Example width in meters
