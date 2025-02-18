@@ -1,26 +1,7 @@
-# Launch parallel esmini runs as defined by a parameter value distribution
-#
-# Example:
-# python ./scripts/run_distribution.py --osc .\resources\xosc\cut-in.xosc --param_dist .\resources\xosc\cut-in_parameter_set.xosc --fixed_timestep 0.05 --headless
-# python run_distribution.py --window 60 60 800 400 --headless --osc /home/patrick_w/esmini/resources/xosc/cut-in.xosc --param_dist /home/patrick_w/esmini/resources/xosc/cut-in_parameter_set.xosc
-
 from multiprocessing.pool import ThreadPool
 import subprocess
 import sys
 import os.path
-
-lib_path = "/content/esmini"
-
-if len(sys.argv) < 3:
-    print('Usage: {} <esmini args>'.format(os.path.basename(sys.argv[0])))
-    print('\nMake sure to add at least:')
-    print('  --osc <scenario file>')
-    print('  --param_dist <parameter distribution file>')
-    print('  --fixed_timestep <timestep>')
-    print('  --headless')
-    print('\nExample:\n  python {} --osc cut-in.xosc --param_dist param_set.xosc --fixed_timestep 0.05 --headless'.
-        format(os.path.basename(sys.argv[0])))
-    exit(-1)
 
 # globals
 launched = 0
@@ -35,25 +16,25 @@ def launch_scenario(index):
     global done
     launched += 1
     print_status()
+    #p = subprocess.run(
+    #    ['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + [f'--osc /content/sim_loop/scenarios/variance_bounded/{str(index)}_cut-in.xosc'] + ['--fixed_timestep 0.05'] + ['--headless'] + ['--window 60 60 800 400'] + [f'--logfile_path ../{str(index)}_log.txt'] + [str(param_values[idx,2])],
+    #    stdout=subprocess.DEVNULL
+    #)
     p = subprocess.run(
-        ['python', '/content/sim_loop/colab_execution_3.py'] + list(sys.argv[1:]) + ['--param_permutation'] + [str(index)],
-        stdout=subprocess.DEVNULL
+        ['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + ['--osc /content/sim_loop/scenarios/cut-in.xosc'] + ['--fixed_timestep 0.05']
     )
     done += 1
     print_status()
 
 
 if __name__ == '__main__':
-    p = subprocess.run(
-        [os.path.join(lib_path, "bin/esmini"), '--disable_stdout'] + list(sys.argv[1:]) + ['--return_nr_permutations'],
-        stdout=subprocess.DEVNULL
-    )
-    n_runs = p.returncode
-    n_runs = 416
-    print(n_runs)
+
+    #n_runs = len(param_values)
     print_status()
 
-    with ThreadPool() as p:
-        p. map(launch_scenario, range(n_runs))
+    #with ThreadPool() as p:
+    #    p. map(launch_scenario, range(n_runs))
+
+    subprocess.run(['python', '/content/sim_loop/evaluation/variance_bounded_testing_method/simulation/variance_bounded_colab_execution.py'] + ['--osc /content/sim_loop/scenarios/cut-in.xosc'])
 
     print()

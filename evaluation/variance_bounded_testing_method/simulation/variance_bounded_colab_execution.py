@@ -200,7 +200,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             speed_action.speed            = 0.0
             speed_action.transition_shape = 0
             speed_action.transition_dim   = 1
-            speed_action.transition_value = sys.argv[-1]
+            speed_action.transition_value = float(sys.argv[-1])
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = True
         
@@ -210,7 +210,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             speed_action.speed            = 30.0
             speed_action.transition_shape = 0
             speed_action.transition_dim   = 1
-            speed_action.transition_value = sys.argv[-1]
+            speed_action.transition_value = float(sys.argv[-1])
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = False
 
