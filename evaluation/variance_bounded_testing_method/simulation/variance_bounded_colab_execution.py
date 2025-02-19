@@ -176,11 +176,7 @@ distances = list()
 flag_speed_action = False
 flag_braking = False
 
-
-max_a_dec = float(extract_a_dec(sys.argv[-1]))
-print('---------------')
-print(max_a_dec)
-print('---------------')
+max_a_dec = float(extract_a_dec(sys.argv[-3]))
 
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
     flag = se.SE_FetchImage(ct.byref(img))
@@ -194,8 +190,8 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
 
         img_array = np.flip(img_array, 0) # flip y axis
         #img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB) # change BGR to RGB
-        image_name = "output_" + str(j) + ".png"
-        cv2.imwrite(image_name, img_array)
+        #image_name = "output_" + str(j) + ".png"
+        #cv2.imwrite(image_name, img_array)
         #results = model(f"images/{image_name}")
         #cv2_imshow(img_array)
         results = model(img_array)
