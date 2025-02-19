@@ -10,6 +10,25 @@ from PIL import Image
 from IPython.display import display
 
 
+def extract_a_dec(osc_path_string):
+
+    # Given string
+    input_string = osc_path_string
+
+    last_part = input_string.split('/')[-1]  # Get the last part after the last '/'
+
+    # Split the string by underscores
+    parts = last_part.split('_')
+
+    # Extract the value between the first and second underscores
+    if len(parts) > 2:
+        extracted_value = parts[1]
+    else:
+        extracted_value = None  # Handle cases where there are not enough parts
+
+    return extracted_value
+
+
 def calculate_distance_threshold(distances, dt, j, ego_deceleration):
     """
     Calculate the distance threshold based on the given distances, time step, 
@@ -157,8 +176,10 @@ distances = list()
 flag_speed_action = False
 flag_braking = False
 
+
+max_a_dec = float(extract_a_dec(sys.argv[-1]))
 print('---------------')
-print(float(sys.argv[-1]))
+print(max_a_dec)
 print('---------------')
 
 while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
@@ -205,7 +226,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             speed_action.speed            = 0.0
             speed_action.transition_shape = 0
             speed_action.transition_dim   = 1
-            speed_action.transition_value = float(sys.argv[-1])
+            speed_action.transition_value = max_a_dec
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = True
         
@@ -215,7 +236,7 @@ while se.SE_GetQuitFlag() == 0 and se.SE_GetSimulationTime() < 17.0:
             speed_action.speed            = 30.0
             speed_action.transition_shape = 0
             speed_action.transition_dim   = 1
-            speed_action.transition_value = float(sys.argv[-1])
+            speed_action.transition_value = max_a_dec
             se.SE_InjectSpeedAction(ct.byref(speed_action))
             flag_speed_action = False
 

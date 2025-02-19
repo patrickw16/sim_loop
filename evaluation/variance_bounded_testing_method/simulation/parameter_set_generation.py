@@ -75,9 +75,11 @@ if __name__ == '__main__':
 
     for idx, parameter in enumerate(parameters):
 
-        input_file = 'scenarios/cut-in.xosc'  # Replace with your input file path
-        output_file = f'scenarios/variance_bounded/{idx}_cut-in.xosc'  # Replace with your desired output file path
         new_s_delta = parameters[idx, 0]  # New value for s_delta
         new_v_delta = parameters[idx, 1]  # New value for v_delta
+        new_a_dec = parameters[idx, 2]  # New value for a_dec
+
+        input_file = 'scenarios/cut-in.xosc'  # Replace with your input file path
+        output_file = f'scenarios/variance_bounded/{idx}_{new_a_dec}_cut-in.xosc'  # Replace with your desired output file path
 
         modify_xml(input_file, output_file, new_s_delta, new_v_delta)
