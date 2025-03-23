@@ -1,6 +1,6 @@
 import numpy as np
-from evaluation.cube_based_evaluation import CubeBasedEvaluation
-from odd_coverage.coverage_param_lvl.coverage_param_lvl import CoverageParamLvl
+import pandas as pd
+from evaluation.cube_based_evaluation import CubeBasedEvaluation, fail_ratio
 
 
 
@@ -11,53 +11,60 @@ if __name__ == '__main__':
     gt_pass_fail = np.load('evaluation/gt_analysis/data/gt_pass_fail.npy')
     gt_sub_cube_centers = np.load('evaluation/gt_analysis/data/gt_sub_cube_centers.npy')
     
-    #Generate evaluation points:
-    my_coverage_param = CoverageParamLvl(
-                        number_of_test_values=50,
-                        trace_epsilon=0.0075,
-                        epsilon_buffer=0.005,
-                        number_of_attempts=1,
-                        combined_points_data_path='./evaluation/variance_bounded_testing_method/data/prior_points_s_delta_v_delta_ego_max_dec.npy')
-            
-    param_values, cov_contribution, updated_cluster_traces, adapted_kmeans_labels, re_sampled_scaled, scaler, weighted_within_variance = my_coverage_param.get_optimised_values(plot_path='/home/patrick_w/odd_coverage/var_poc_3d_example.svg')
+    # Order the sim log to align the order of the simulation runs with the param values (test case values)
+    df_sim = pd.read_csv('evaluation/variance_bounded_testing_method/data/logs/compiled_log_data.csv')
+    df_sim['FileNumber'] = df_sim['Filename'].str.extract(r'(\d+)').astype(int) # Extract the first value from the Filename
+    result = df_sim[['FileNumber', 'CollisionDetected']]
+    ordered_sim_logs = result.sort_values(by='FileNumber')
+    ordered_sim_logs.reset_index(drop=True, inplace=True)
+    pass_fail = ordered_sim_logs['CollisionDetected'].to_numpy()
+    
+    points = np.load('evaluation/variance_bounded_testing_method/data/points.npy')
+    groups = np.load('evaluation/variance_bounded_testing_method/data/adapted_kmeans_labels.npy').astype(int)
+    param_values = np.load('evaluation/variance_bounded_testing_method/data/param_values.npy')
 
-    print(param_values)
-
-    points = scaler.inverse_transform(re_sampled_scaled)
-
-    # Step 1: take the param_values and generate the test case file for simulation
-        # --> focus on test case amount between 8-100 (less makes no sense, and more as well)
-
-    # Parameter distribution cannot be used, as already concrete test cases are defined (with the explicit values)
-    # Take the param values and generate the individual scenarios (changing s_delta and v_delta)
-    # New files for run_distribution needs to be created --> as input at least the amount of test cases and the folder of the scenarios
-    # Then, using the index (refering to the param values), the saved param values need be loaded and then the ego max dec needs to be determined (based on the index)
-    # For colab usage this needs to be combined in a Juypter notebook...
-    # -------------------------
-
-    # Step 2: run the simulation and get the results (pass/fail info)
-    # Step 3 (optional): place additional evaluation points depending on the shape/position of the logistic regression plane compared to the orignal
-    # Step 4: load the GT results and perform the comparison/evaluation
-
-    pass_fail = [True] * len(adapted_kmeans_labels)
+    print(groups)
 
     #Compare
-
     comparison_gt_evaluation = CubeBasedEvaluation(gt_cube_sizes=gt_cubes_sizes,
-                                                   gt_sub_cube_centers=gt_sub_cube_centers,
-                                                   gt_pass_fail=gt_pass_fail)
+                                                gt_sub_cube_centers=gt_sub_cube_centers,
+                                                gt_pass_fail=gt_pass_fail)
     sub_cubes_with_points = comparison_gt_evaluation.evaluate_gt_cubes_based_on_eval_points(points=points,
-                                                                                            groups=adapted_kmeans_labels,
+                                                                                            groups=groups,
                                                                                             pass_fail=pass_fail)
     
     sub_cubes_with_points = comparison_gt_evaluation.assign_all_sub_cubes(sub_cubes_with_points=sub_cubes_with_points,
-                                                                          points=points,
-                                                                          groups=adapted_kmeans_labels,
-                                                                          pass_fail=pass_fail)
+                                                                        points=points,
+                                                                        groups=groups,
+                                                                        pass_fail=pass_fail)
     
     #comparison_gt_evaluation.plot_cubes(sub_cubes_with_points=sub_cubes_with_points,
     #                                  points=points)
     
     metric = comparison_gt_evaluation.calculate_comparison_metric(sub_cubes_with_points=sub_cubes_with_points)
-    print(metric)
+    gt_fail_ratio = fail_ratio(gt_pass_fail)
+    eval_fail_ratio = fail_ratio(np.array(pass_fail))
+    fail_ratio_difference = (fail_ratio(gt_pass_fail)-fail_ratio(np.array(pass_fail)))*100
+    abs_fail_ratio_difference = np.abs(fail_ratio_difference)
+    number_of_test_cases = len(points)
+
+    evaluation_dict[combi_idx] = {
+        'metric': metric,
+        'fail_ratio_difference': fail_ratio_difference,
+        'absolute_fail_ratio_difference': abs_fail_ratio_difference,
+        'number_of_test_cases': number_of_test_cases,
+        'gt_fail_ratio': gt_fail_ratio,
+        'eval_fail_ratio': eval_fail_ratio,
+        's_delta_range': s_delta_range,
+        'v_delta_range': v_delta_range,
+        'ego_max_dec_range': ego_max_dec_range,
+        'points': points,
+        'pass_fail': pass_fail
+    }
+
+    df = pd.DataFrame.from_dict(evaluation_dict, orient='index')    
+    print(df)
+
+    df.to_csv('evaluation/variance_bounded_testing_method/data/variance_bounded_testing_method_evaluation.csv', index=False) 
+
 
