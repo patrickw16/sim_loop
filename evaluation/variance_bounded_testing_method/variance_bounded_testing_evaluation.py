@@ -23,7 +23,7 @@ if __name__ == '__main__':
     groups = np.load('evaluation/variance_bounded_testing_method/data/adapted_kmeans_labels.npy').astype(int)
     param_values = np.load('evaluation/variance_bounded_testing_method/data/param_values.npy')
 
-    print(groups)
+    #print(groups)
     #print(param_values[:,0]) # -> s_delta
 
 
@@ -36,6 +36,10 @@ if __name__ == '__main__':
     
     #print(pass_fail_points)
 
+    #alternative
+    points = param_values
+    pass_fail = pass_fail
+    groups = np.arange(len(param_values))
 
     #Compare
     comparison_gt_evaluation = CubeBasedEvaluation(gt_cube_sizes=gt_cubes_sizes,
@@ -58,18 +62,20 @@ if __name__ == '__main__':
     eval_fail_ratio = fail_ratio(np.array(pass_fail))
     fail_ratio_difference = (fail_ratio(gt_pass_fail)-fail_ratio(np.array(pass_fail)))*100
     abs_fail_ratio_difference = np.abs(fail_ratio_difference)
-    number_of_test_cases = len(points)
+    number_of_test_cases = len(param_values[:,0])
 
-    evaluation_dict[combi_idx] = {
+    evaluation_dict = dict()
+
+    evaluation_dict[0] = {
         'metric': metric,
         'fail_ratio_difference': fail_ratio_difference,
         'absolute_fail_ratio_difference': abs_fail_ratio_difference,
         'number_of_test_cases': number_of_test_cases,
         'gt_fail_ratio': gt_fail_ratio,
         'eval_fail_ratio': eval_fail_ratio,
-        's_delta_range': s_delta_range,
-        'v_delta_range': v_delta_range,
-        'ego_max_dec_range': ego_max_dec_range,
+        's_delta_range': param_values[:,0],
+        'v_delta_range': param_values[:,1],
+        'ego_max_dec_range': param_values[:,2],
         'points': points,
         'pass_fail': pass_fail
     }
