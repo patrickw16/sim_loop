@@ -24,6 +24,18 @@ if __name__ == '__main__':
     param_values = np.load('evaluation/variance_bounded_testing_method/data/param_values.npy')
 
     print(groups)
+    #print(param_values[:,0]) # -> s_delta
+
+
+    pass_fail_points = np.zeros(len(groups))
+    for i in range(len(groups)):
+        group = groups[i]
+        pass_fail_points[i] = pass_fail[group]
+    
+    pass_fail_points = pass_fail_points.astype(bool)
+    
+    #print(pass_fail_points)
+
 
     #Compare
     comparison_gt_evaluation = CubeBasedEvaluation(gt_cube_sizes=gt_cubes_sizes,
