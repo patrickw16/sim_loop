@@ -88,7 +88,7 @@ def plot_skew_normal_with_noise(clf, z_target):
     m, c = np.polyfit(x_values, y_values, 1)
 
     a = -1  # skewness parameter
-    scale = 20  # scale parameter to adjust variance
+    scale = 10  # scale parameter to adjust variance
     loc = 0  # location parameter
 
     y_noise = skewnorm.rvs(a=a, loc=loc, scale=scale, size=len(x_values))

@@ -17,7 +17,7 @@ if __name__ == '__main__':
     result = df_sim[['FileNumber', 'CollisionDetected']]
     ordered_sim_logs = result.sort_values(by='FileNumber')
     ordered_sim_logs.reset_index(drop=True, inplace=True)
-    pass_fail = ordered_sim_logs['CollisionDetected'].to_numpy()
+    pass_fail_logs = ordered_sim_logs['CollisionDetected'].to_numpy()
     
     points = np.load('evaluation/variance_bounded_testing_method/data/points.npy')
     groups = np.load('evaluation/variance_bounded_testing_method/data/adapted_kmeans_labels.npy').astype(int)
@@ -30,15 +30,15 @@ if __name__ == '__main__':
     pass_fail_points = np.zeros(len(groups))
     for i in range(len(groups)):
         group = groups[i]
-        pass_fail_points[i] = pass_fail[group]
+        pass_fail_points[i] = pass_fail_logs[group]
     
-    pass_fail_points = pass_fail_points.astype(bool)
+    pass_fail = pass_fail_points.astype(bool)
     
     #print(pass_fail_points)
 
     #alternative
     points = param_values
-    pass_fail = pass_fail
+    pass_fail = pass_fail_logs
     groups = np.arange(len(param_values))
 
     #Compare
