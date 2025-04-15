@@ -89,7 +89,7 @@ def plot_skew_normal_with_noise(clf, z_target):
 
     a = -1  # skewness parameter
     scale = 10  # scale parameter to adjust variance
-    loc = 0  # location parameter
+    loc = 5  # location parameter
 
     y_noise = skewnorm.rvs(a=a, loc=loc, scale=scale, size=len(x_values))
     y_with_noise = (m * x_values + c) + y_noise
@@ -99,12 +99,12 @@ def plot_skew_normal_with_noise(clf, z_target):
 
     noisy_points = np.column_stack((x_values, y_with_noise, z_with_noise))
 
-    return noisy_points
+    return noisy_points, a, scale, loc
 
 all_noisy_points = []
 
 for z_target in np.arange(3,8,1):
-    noisy_points = plot_skew_normal_with_noise(clf, z_target=z_target)
+    noisy_points, a, scale, loc = plot_skew_normal_with_noise(clf, z_target=z_target)
     all_noisy_points.append(noisy_points)
 
 combined_noisy_points = np.vstack(all_noisy_points)
@@ -119,7 +119,7 @@ z_thresholds = (3, 7)     # Example thresholds for z (ego_max_dec)
 filtered_noisy_points = filter_points(combined_noisy_points, x_thresholds, y_thresholds, z_thresholds)
 print(filtered_noisy_points.shape)
 
-np.save('prior_points_s_delta_v_delta_ego_max_dec.npy', filtered_noisy_points)
+np.save(f'prior_points_s_delta_v_delta_ego_max_dec_{a}_{scale}_{loc}.npy', filtered_noisy_points)
 
 ax.plot3D(df_coll['s_delta'], df_coll['v_delta'], df_coll['ego_max_dec'],'ob')
 ax.plot3D(df_no_coll['s_delta'], df_no_coll['v_delta'], df_no_coll['ego_max_dec'],'sr')
