@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import sklearn.linear_model
 import numpy as np
 import matplotlib.pyplot as plt
+import itertools
+
 from sklearn import svm, datasets
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.stats import skewnorm
@@ -78,7 +80,7 @@ def filter_points(points, x_thresholds, y_thresholds, z_thresholds):
 
     return filtered_points
 
-def plot_skew_normal_with_noise(clf, z_target):
+def plot_skew_normal_with_noise(clf, z_target, a, scale, loc):
 
     # Generate x values
     x_values = np.linspace(10, 60, 2000)
@@ -87,9 +89,9 @@ def plot_skew_normal_with_noise(clf, z_target):
 
     m, c = np.polyfit(x_values, y_values, 1)
 
-    a = -1  # skewness parameter
-    scale = 10  # scale parameter to adjust variance
-    loc = 5  # location parameter
+    # a ... skewness parameter
+    # scale ... parameter to adjust variance
+    # loc ...location parameter
 
     y_noise = skewnorm.rvs(a=a, loc=loc, scale=scale, size=len(x_values))
     y_with_noise = (m * x_values + c) + y_noise
@@ -101,30 +103,45 @@ def plot_skew_normal_with_noise(clf, z_target):
 
     return noisy_points, a, scale, loc
 
-all_noisy_points = []
 
-for z_target in np.arange(3,8,1):
-    noisy_points, a, scale, loc = plot_skew_normal_with_noise(clf, z_target=z_target)
-    all_noisy_points.append(noisy_points)
+# Define your arrays
+array1 = [3, 0, -3, -4] #a
+array2 = [10,15] #scale
+array3 = [-5,0,5] #loc
 
-combined_noisy_points = np.vstack(all_noisy_points)
-print(combined_noisy_points.shape)
+# Generate all possible combinations
+combinations = list(itertools.product(array1, array2, array3))
 
-# Define thresholds for filtering
-x_thresholds = (10, 60)  # Example thresholds for x (s_delta)
-y_thresholds = (10, 40)  # Example thresholds for y (v_delta)
-z_thresholds = (3, 7)     # Example thresholds for z (ego_max_dec)
+# Print the combinations
+for combo in combinations:
+    a = combo[0]
+    scale = combo[1]
+    loc = combo[2]
 
-# Filter the combined noisy points
-filtered_noisy_points = filter_points(combined_noisy_points, x_thresholds, y_thresholds, z_thresholds)
-print(filtered_noisy_points.shape)
+    all_noisy_points = []
 
-np.save(f'prior_points_s_delta_v_delta_ego_max_dec_{a}_{scale}_{loc}.npy', filtered_noisy_points)
+    for z_target in np.arange(3,8,1):
+        noisy_points, a, scale, loc = plot_skew_normal_with_noise(clf, z_target=z_target, a=a, scale=scale, loc=loc)
+        all_noisy_points.append(noisy_points)
 
-ax.plot3D(df_coll['s_delta'], df_coll['v_delta'], df_coll['ego_max_dec'],'ob')
-ax.plot3D(df_no_coll['s_delta'], df_no_coll['v_delta'], df_no_coll['ego_max_dec'],'sr')
-ax.scatter3D(filtered_noisy_points[:,0], filtered_noisy_points[:,1], filtered_noisy_points[:,2], color='yellow')
-ax.plot_surface(x, y, z_values)
+    combined_noisy_points = np.vstack(all_noisy_points)
+    print(combined_noisy_points.shape)
 
-ax.view_init(30, 60)
-plt.show()
+    # Define thresholds for filtering
+    x_thresholds = (10, 60)  # Example thresholds for x (s_delta)
+    y_thresholds = (10, 40)  # Example thresholds for y (v_delta)
+    z_thresholds = (3, 7)     # Example thresholds for z (ego_max_dec)
+
+    # Filter the combined noisy points
+    filtered_noisy_points = filter_points(combined_noisy_points, x_thresholds, y_thresholds, z_thresholds)
+    print(filtered_noisy_points.shape)
+
+    np.save(f'prior_points_s_delta_v_delta_ego_max_dec_{a}_{scale}_{loc}.npy', filtered_noisy_points)
+
+    #ax.plot3D(df_coll['s_delta'], df_coll['v_delta'], df_coll['ego_max_dec'],'ob')
+    #ax.plot3D(df_no_coll['s_delta'], df_no_coll['v_delta'], df_no_coll['ego_max_dec'],'sr')
+    #ax.scatter3D(filtered_noisy_points[:,0], filtered_noisy_points[:,1], filtered_noisy_points[:,2], color='yellow')
+    #ax.plot_surface(x, y, z_values)
+
+    #ax.view_init(30, 60)
+    #plt.show()
